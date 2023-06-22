@@ -1,7 +1,7 @@
-from prompts.auto_generator import AutoPromptGenerator
+from prompts.auto_generator import AutoMarketAnalysisPromptGenerator
 
-generator = AutoPromptGenerator("data")
+generator = AutoMarketAnalysisPromptGenerator("data")
 
-output = generator.generate_dynamic_analysis_prompt_specific_domain("market analysis")
+output = generator.generate_dynamic_prompt("market analysis")
 
 print(output)
