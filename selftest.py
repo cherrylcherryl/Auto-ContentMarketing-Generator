@@ -1,7 +1,7 @@
-from prompts.auto_generator import AutoMarketAnalysisPromptGenerator
+from chat.chat import LLMSequentialChatModel
 
-generator = AutoMarketAnalysisPromptGenerator("data")
 
-output = generator.generate_dynamic_prompt("market analysis")
+model = LLMSequentialChatModel()
 
-print(output)
+res = model.auto_create_content("print on demain")
+print(res)
