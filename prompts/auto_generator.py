@@ -135,21 +135,13 @@ class AutoContentCreationPromptGenerator:
             Provide expectation of the required scope, skillset and knowledge. 
             If there is no specific role found, use relative reference if necessary. 
             The role is craete a post in social media like {0}, the post must be most attracted to reader.
-            Your goal is try to generate a good prompt that it can help chatgpt to creat a content marketing in social media.
-            You must supply information about the "market analysis", "competitor assessment" and "unique selling point" in your prompt.
-            Here is addition information, you can summarize this before craft prompt:
-            Market Analysis: {1}.
-            Competitor assesment: {2}.
-            Unique selling point: {3}
-            The paragraph must contain "I wolud like you to act as professional content create in {4}".
+            Your goal is try to generate a good prompt that it can help chatgpt to creat a content marketing in social media including som specific in this media such as #hastag, websitelink, etc.
+            The prompt should provide the contrain output that only return the content created.
         '''
 
     def generate_dynamic_prompt(
             self, media : str, 
-            market_analysis: str, 
-            competitor_analysis : str, 
-            selling_point : str
     ) -> str:
-        prompt = self.qa_model.run(self.prompt_template.format(media, market_analysis, competitor_analysis, selling_point))
+        prompt = self.qa_model.run(self.prompt_template.format(media))
         return prompt
     
