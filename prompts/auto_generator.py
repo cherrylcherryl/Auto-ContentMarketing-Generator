@@ -2,8 +2,7 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
-
-
+from utils.json_utils import llm_response_schema
 from apikey import OPENAI_API_KEY
 
 class AutoMarketAnalysisPromptGenerator:
@@ -134,14 +133,16 @@ class AutoContentCreationPromptGenerator:
             Craft a paragraph of how chatgpt (address as you) supposed to act based on the role stated. 
             Provide expectation of the required scope, skillset and knowledge. 
             If there is no specific role found, use relative reference if necessary. 
-            The role is craete a post in social media like {0}, the post must be most attracted to reader.
-            Your goal is try to generate a good prompt that it can help chatgpt to creat a content marketing in social media including som specific in this media such as #hastag, websitelink, etc.
-            The prompt should provide the contrain output that only return the content created.
+            The role is craete a post in social media like {0}, the post must be most attracted to reader. \n\n
+            Your goal is try to generate a good prompt that it can help chatgpt to creat a content marketing in social media including som specific in this media such as #hashtag, websitelink, etc. \n\n
+            Respond with only valid JSON conforming to the following schema: \n {1}\n
         '''
+
+        self.llm_schema = llm_response_schema()
 
     def generate_dynamic_prompt(
             self, media : str, 
     ) -> str:
-        prompt = self.qa_model.run(self.prompt_template.format(media))
+        prompt = self.qa_model.run(self.prompt_template.format(media, self.llm_schema))
         return prompt
     
