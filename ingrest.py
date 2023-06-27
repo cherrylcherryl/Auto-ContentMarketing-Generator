@@ -33,7 +33,7 @@ COMPETITOR_ASSESSMENTS_SITES = [
     'https://www.linkedin.com/pulse/chatgpt-prompts-sales-paul-gentile'
 ]
 
-UNIQUI_SELLING_POINT_SITES = [
+UNIQUE_SELLING_POINT_SITES = [
     'https://github.com/f/awesome-chatgpt-prompts',
     'https://www.greataiprompts.com/prompts/best-system-prompts-for-chatgpt/',
     'https://stackdiary.com/chatgpt/role-based-prompts/',
@@ -85,7 +85,7 @@ if __name__ == '__main__':
     print("Integrated Market Analysis")
     ingrest_data(COMPETITOR_ASSESSMENTS_SITES, embeddings, path='data/integrated/competitor_assessments')
     print("Competitor Assessments Analysis")
-    ingrest_data(UNIQUI_SELLING_POINT_SITES, embeddings, path='data/integrated/unique_selling_point')
+    ingrest_data(UNIQUE_SELLING_POINT_SITES, embeddings, path='data/integrated/unique_selling_point')
     print("Integrated Unique Selling Point Analysis")
     ingrest_data(CONTENT_CREATION_SITES, embeddings, path='data/integrated/content_creator')
     print("Integrated Content Creation")
