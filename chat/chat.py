@@ -57,13 +57,39 @@ class LLMSequentialChatModel:
             **kwargs
     ) -> str: 
         
-        market_analysis_prompt = self.market_analysis_prompt_generator.generate_dynamic_prompt(domain=domain)
-        market_analysis = self.agent.answer(market_analysis_prompt)
-        competitor_prompt = self.competitor_analysis_prompt_generator.generate_dynamic_prompt(domain=domain, market_analysis_info=market_analysis)
-        competitor_analysis = self.agent.answer(competitor_prompt)
+        #OK --> market_analysis_prompt = self.market_analysis_prompt_generator.generate_dynamic_prompt(domain=domain)
+        #OK --> market_analysis = self.agent.answer(market_analysis_prompt)
+        
+        #OK --> competitor_prompt = self.competitor_analysis_prompt_generator.generate_dynamic_prompt(domain=domain)
+        #OK --> competitor_analysis = self.agent.answer(competitor_prompt)
+
+        competitor_analysis = '''
+        1. Competitors:
+        - Printful: Printful is one of the most popular print-on-demand companies. They offer over 220 different products and provide a wide range of services.
+        - Printify: Printify is a major competitor to Printful. They offer a similar range of products and services for print on demand.
+
+        2. Strategies:
+        - Printful: Printful focuses on providing a wide variety of products and services to their customers. They have a user-friendly interface and offer integrations with popular e-commerce platforms.
+        - Printify: Printify also offers a wide range of products and services. They differentiate themselves by providing 
+        a large network of printing partners, allowing customers to choose the best option for their needs.
+
+        3. Ads Strategies:
+        - Unfortunately, I couldn't find specific information about the advertising strategies of these competitors. However, it is common for print on demand companies to use online advertising platforms like Google Ads and social media ads to reach their target audience.
+
+        4. Differentiators and Customer Experience:
+        - Printful: Printful differentiates itself by offering a wide range of products and services, as well as integrations with popular e-commerce platforms. They also provide excellent customer support and have a user-friendly interface.   - Printify: Printify differentiates itself by providing a large network of printing partners, giving customers more options and flexibility. They also offer competitive pricing and a user-friendly platform.
+
+        Overall, both Printful and Printify are popular print on demand competitors that offer a wide range of products and services. They differentiate themselves through their unique features and customer experiences. While I couldn't find specific information about their advertising strategies, it is common for print on demand companies to use online advertising platforms to reach their target audience.
+
+        '''
+
         selling_point_prompt = self.selling_point_analysis_prompt_generator.generate_dynamic_prompt(domain=domain, competitor_analysis=competitor_analysis)
+        
         selling_point_analysis = self.agent.answer(selling_point_prompt)
         content_creator_prompt = self.content_creation_prompt_generator.generate_dynamic_prompt(social_media)
+        
+        
+        
         # message = [
         #     SystemMessage(
         #     content='''

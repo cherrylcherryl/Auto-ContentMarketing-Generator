@@ -24,12 +24,9 @@ class AutoMarketAnalysisPromptGenerator:
 
         self.prompt_template = '''
             Craft a paragraph of how chatgpt (address as you) supposed to act based on the role stated. 
-            Provide expectation of the required scope, skillset and knowledge. 
-            If there is no specific role found, use relative reference if necessary. 
-            The role is market analysis about "{0}".
-            Task: generate chatGPT prompt 
-            Goal: help chatgpt can in-depth analysis into the market.
-            The paragraph must contain "Imagine that you are a {1} and you want to in-depth analysis about this market" and end with "If you could not how to start or continue, you can find answer on google search."
+            Comprehensive market research and analysis to understand the {0} industry and identify potential opportunities and challenges.
+            provides detail questions.
+            The paragraph should contain "I want you to act as a "
         '''
 
     def generate_dynamic_prompt(
@@ -42,7 +39,6 @@ class AutoMarketAnalysisPromptGenerator:
             f'{prompt}\n' + 
             f'Constraints: \n' +
             f'Maximum 400 words for response, try to summarize as much as possible\n' +
-            f'If need to search on internet, limit to 3 times\n' +
             f'Performance Evaluation: \n' +
             f'Every command has a cost, so be smart and efficient. Aim to complete tasks in the least number of steps. Minimum search step.\n'
             
@@ -67,29 +63,25 @@ class AutoCompetitorAssessmentPromptGenerator:
         )
 
         self.prompt_template = '''
-            Craft a paragraph of how chatgpt (address as you) supposed to act based on the role stated. 
-            Provide expectation of the required scope, skillset and knowledge. 
-            If there is no specific role found, use relative reference if necessary. 
-            The role is competitor assessmens in "{0}" domain.
-            Task: generate a chatGPT prompt 
-            Goal: help chatgpt can analysis the competitor assessment.
-            I will provide you some information about the market analysis. You can use this information to construct the prompt.
-            Here is the market analysis info: "{1}"
-            The prompt must guide chatgpt to auto find some competitor. if chatgpt can not know many competitor, he must search on google. 
-            The paragraph must contain "Suppose that you are a senior in data analysis" and provide the Performance Evaluation:\n
+            Craft a paragraph that
+            identify keyword opportunities by analyzing the top-ranking keywords for each competitor on {0}.
+            Privides detail question.
         '''
 
     def generate_dynamic_prompt(
             self, 
             domain : str, 
-            market_analysis_info : str
     ) -> str:
-        prompt = self.qa_model.run(self.prompt_template.format(domain, market_analysis_info))
+        prompt = self.qa_model.run(self.prompt_template.format(domain))
         prompt = (
             f'{prompt}\n' + 
+            f'Search on google some competitor on {domain} and answer:' + 
+            f'1. Who/which is Competitors' +
+            f'2. Strategies of theme' + 
+            f'3. Ads Strategies' + 
+            f'4. Differentiators and Customer Experience' +
             f'Constraints: \n' +
             f'Maximum 400 words for response, try to summarize as much as possible\n' +
-            f'If need to search on internet, limit to 3 times\n' +
             f'Performance Evaluation: \n' +
             f'Every command has a cost, so be smart and efficient. Aim to complete tasks in the least number of steps. Minimum search step.\n'  
         )
@@ -112,14 +104,8 @@ class AutoDetectUniqueSellingPointPromptGenerator:
         )
 
         self.prompt_template = '''
-            Craft a paragraph of how chatgpt (address as you) supposed to act based on the role stated. 
-            Provide expectation of the required scope, skillset and knowledge. 
-            If there is no specific role found, use relative reference if necessary. 
-            The role is detect unique selling point about {0}.
-            Task: generate chatGPT prompt 
-            Goal: help chatgpt can analysis the unique selling point.
-            I will be provided to you some information about the competitor assessment, you can use this information to generate prompt.
-            Here is the competitor analysis "{1}" \n
+            With my competitor analysis {0}.
+            Craft paragraph to ask chatgpt to analize the unique selling point of my {1} product.
         '''
 
     def generate_dynamic_prompt(
@@ -127,12 +113,12 @@ class AutoDetectUniqueSellingPointPromptGenerator:
             domain : str, 
             competitor_analysis: str
     ) -> str:
-        prompt = self.qa_model.run(self.prompt_template.format(domain, competitor_analysis))
+        prompt = self.qa_model.run(self.prompt_template.format(competitor_analysis, domain))
         prompt = (
+            f'Search on internet and answer the questions:\n'
             f'{prompt}\n' + 
             f'Constraints: \n' +
             f'Maximum 400 words for response, try to summarize as much as possible\n' +
-            f'If need to search on internet, limit to 3 times\n' +
             f'Performance Evaluation: \n' +
             f'Every command has a cost, so be smart and efficient. Aim to complete tasks in the least number of steps. Minimum search step.\n'
             
