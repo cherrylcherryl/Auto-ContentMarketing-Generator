@@ -2,19 +2,20 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 from utils.json_utils import llm_response_schema
 from apikey import OPENAI_API_KEY
 
 class AutoMarketAnalysisPromptGenerator:
     def __init__(
             self, 
-            llm : ChatOpenAI | None = None, 
+            llm : OpenAI | ChatOpenAI | None = None, 
             data_path : str = 'data/integrated/market_analysis'
     ):
         embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
         chroma_instance = Chroma(persist_directory=data_path, embedding_function=embeddings)
         if llm is None:
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
+            llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
 
         self.qa_model = RetrievalQA.from_chain_type(
             llm = llm,
@@ -54,7 +55,7 @@ class AutoCompetitorAssessmentPromptGenerator:
         embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
         chroma_instance = Chroma(persist_directory=data_path, embedding_function=embeddings)
         if llm is None:
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
+            llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
 
         self.qa_model = RetrievalQA.from_chain_type(
             llm = llm,
@@ -95,7 +96,7 @@ class AutoDetectUniqueSellingPointPromptGenerator:
         embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
         chroma_instance = Chroma(persist_directory=data_path, embedding_function=embeddings)
         if llm is None:
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
+            llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
 
         self.qa_model = RetrievalQA.from_chain_type(
             llm = llm,
@@ -135,7 +136,7 @@ class AutoContentCreationPromptGenerator:
         embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
         chroma_instance = Chroma(persist_directory=data_path, embedding_function=embeddings)
         if llm is None:
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
+            llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
 
         self.qa_model = RetrievalQA.from_chain_type(
             llm = llm,
