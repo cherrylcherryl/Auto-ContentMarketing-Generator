@@ -114,7 +114,7 @@ class LLMSequentialChatModel:
         #     )
         # ]
 
-        content_created = self.agent.answer(content_creator_prompt)
+        content_created = self.llm(content_creator_prompt)
 
         return content_created
         

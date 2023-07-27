@@ -1,4 +1,4 @@
-from chat.chat import LLMSequentialChatModel
+from chat.dynamic_chat import LLMSequentialChatModel
 
 
 model = LLMSequentialChatModel()

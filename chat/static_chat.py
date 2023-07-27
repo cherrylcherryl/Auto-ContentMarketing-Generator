@@ -6,7 +6,7 @@ os.environ["SERPER_API_KEY"] = SERPER_API_KEY
 from langchain.llms import OpenAI
 from langchain.utilities import GoogleSerperAPIWrapper
 from langchain.agents import initialize_agent, AgentType, load_tools, Tool
-
+from prompts.analysis_template import StaticPromptTemplate
 class LLMStaticChat:
     def __init__(
             self,
@@ -35,6 +35,14 @@ class LLMStaticChat:
     
     def company_analysis(
             self,
-            query : str
+            company : str,
+            domain: str
     ) -> dict: 
-        pass
+        prompt_template = StaticPromptTemplate()
+        company_analysis = dict()
+
+        company_analysis["market_analysis"] = self.agent.run(prompt_template.get_market_analysis_prompt(domain))
+        company_analysis["competitor"] = self.agent.run(prompt_template.get_competitor_prompt(company))
+        company_analysis["key_selling_point"] = self.agent.run(prompt_template.get_key_selling_point(company))
+
+        return company_analysis

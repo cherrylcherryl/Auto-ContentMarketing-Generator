@@ -1,0 +1,47 @@
+from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+from typing import Union, List
+from apikey import OPENAI_API_KEY
+class ChatService:
+    def __init__(
+            self,
+            llm : Union[ChatOpenAI, OpenAI] = None,
+            temperature : float = 0
+    ):
+        if llm is None:
+            llm = OpenAI(model='chat-gpt-3.5-turbo', temperature=temperature, openai_api_key=OPENAI_API_KEY)
+        self.llm = llm
+
+    def chat(
+            self,
+            prompt : str,
+    ) -> str:
+        return self.llm(prompt)
+
+    def chat_with_template(
+            self,
+            template : List[dict]
+    ) -> str:
+        message = []
+        for command in template:
+            message.append(self.__construct_message__(command))
+        
+        return self.llm(message)
+    
+    def __construct_message__(
+            self,
+            command: dict
+    ):
+        if command['role'] == 'system':
+            return SystemMessage(
+                content= command['content']
+            )
+        if command['role'] == 'human':
+            return HumanMessage(
+                content=command['content']
+            )
+        if command['role'] == 'AI':
+            return AIMessage(
+                content=command['content']
+            )
