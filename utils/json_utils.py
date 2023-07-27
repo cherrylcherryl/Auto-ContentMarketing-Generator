@@ -3,6 +3,7 @@ from typing import Any
 import json
 import os.path
 from jsonschema import Draft7Validator
+from typing import Tuple, Union, List
 
 LLM_DEFAULT_RESPONSE_FORMAT = "llm_response_format"
 
@@ -46,3 +47,39 @@ def validate_json(
             print(f"JSON Validation Error: {error}")
         return False
     return True
+
+
+def validate_market_analysis_schema(
+        jdata : str
+) -> Tuple[bool, Union[dict, None]] :
+    try:
+        jObject = json.loads(jdata)
+        if "chance" not in jObject.keys():
+            return False, None
+        if "challenge" not in jObject.keys():
+            return False, None
+        if not isinstance(jObject["chance"], list):
+            return False, None
+        if not isinstance(jObject["challenge"], list):
+            return False, None
+        return True, jObject
+    except:
+        return False, None
+    
+def validate_list_schema(
+        jdata : str
+) -> Tuple[bool, Union[List[dict], None]] :
+    try:
+        jObject = json.loads(jdata)
+        if not isinstance(jObject, list):
+            return False, None
+        for e in jObject:
+            if not isinstance(e, dict):
+                return False, None
+            if "name" not in e.keys():
+                return False, None
+            if "reason" not in e.keys():
+                return False, None
+        return True, jObject
+    except:
+        return False, None

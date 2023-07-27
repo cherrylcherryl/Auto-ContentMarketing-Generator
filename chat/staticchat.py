@@ -7,6 +7,8 @@ from langchain.llms import OpenAI
 from langchain.utilities import GoogleSerperAPIWrapper
 from langchain.agents import initialize_agent, AgentType, load_tools, Tool
 from prompts.analysis_template import StaticPromptTemplate
+from utils.json_utils import validate_list_schema, validate_market_analysis_schema
+from typing import Callable, Union, Any, Tuple
 class LLMStaticChat:
     def __init__(
             self,
@@ -40,9 +42,33 @@ class LLMStaticChat:
     ) -> dict: 
         prompt_template = StaticPromptTemplate()
         company_analysis = dict()
-
-        company_analysis["market_analysis"] = self.agent.run(prompt_template.get_market_analysis_prompt(domain))
-        company_analysis["competitor"] = self.agent.run(prompt_template.get_competitor_prompt(company))
-        company_analysis["key_selling_point"] = self.agent.run(prompt_template.get_key_selling_point(company))
+        company_analysis["market_analysis"] = self.__query_in_loop__(
+            prompt=prompt_template.get_market_analysis_prompt(domain),
+            validator=validate_market_analysis_schema
+        )
+        company_analysis["competitor"] = self.__query_in_loop__(
+            prompt=prompt_template.get_competitor_prompt(company),
+            validator=validate_list_schema
+        )
+        company_analysis["key_selling_point"] = self.__query_in_loop__(
+            prompt_template.get_key_selling_point(company),
+            validator=validate_list_schema
+        )
 
         return company_analysis
+
+    def __query_in_loop__(
+            self,
+            prompt : str,
+            validator : Callable[[str], Tuple[bool, Any]],
+            max_retries : int = 3
+    ) -> Union[None, Any]:
+        while max_retries > 0:
+            response = self.agent.run(prompt)
+            val, res = validator(response)
+            if val == False:
+                max_retries-=1
+                continue
+            else:
+                return res
+        return None

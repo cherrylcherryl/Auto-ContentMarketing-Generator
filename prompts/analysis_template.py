@@ -9,8 +9,8 @@ class StaticPromptTemplate:
             My company is working on {domain}, in this market what is my chance and challenge
             Reply with a valid json format:
             {
-                "chance": the chance of my company in this market, reply with list format as [chance_1, chance_2, ... , chance_n],
-                "challenge": the challenge of my company, reply with list format as [challenge_1, challenge_2, ... , challenge_n]
+                "chance": the chance of my company in this market, reply with a list format as ["chance_1", "chance_2", ... , "chance_n"], each element is a string format so put it on quotes \n
+                "challenge": the challenge of my company, reply with a list format as ["challenge_1", "challenge_2", ... , "challenge_n"], each element is a string format so put it on quotes \n
             } 
             '''
         )
@@ -21,13 +21,13 @@ class StaticPromptTemplate:
             Reply with a valid list of json format:
             [
                 {
-                    "Name": the name of competitor_1,
-                    "Reason": the reason that you said it is my conpetitor_1
+                    "name": the name of competitor_1,
+                    "reason": the reason that you said it is my conpetitor_1
                 },
                 ...
                 {
-                    "Name": the name of competitor_n,
-                    "Reason": the reason that you said it is my conpetitor_n 
+                    "name": the name of competitor_n,
+                    "reason": the reason that you said it is my conpetitor_n 
                 }
             ]
             '''

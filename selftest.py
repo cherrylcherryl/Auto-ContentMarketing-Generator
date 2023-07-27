@@ -1,7 +1,7 @@
-from chat.dynamic_chat import LLMSequentialChatModel
+from chat.dynamicchat import LLMDynamicChat
 
 
-model = LLMSequentialChatModel()
+model = LLMDynamicChat()
 
 res = model.auto_create_content("print on demain", "facebook")
 print(res)

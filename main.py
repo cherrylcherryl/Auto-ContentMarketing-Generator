@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import uvicorn
 from viewmodel.model import CompanyInfo, CompanyAnalysis
-from chat.service import ChatService
+from chat.chatservice import ChatService
 
 app = FastAPI()
 

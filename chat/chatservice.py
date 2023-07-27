@@ -10,7 +10,7 @@ class ChatService:
             temperature : float = 0
     ):
         if llm is None:
-            llm = OpenAI(model='chat-gpt-3.5-turbo', temperature=temperature, openai_api_key=OPENAI_API_KEY)
+            llm = OpenAI(model='gpt-3.5-turbo', temperature=temperature, openai_api_key=OPENAI_API_KEY)
         self.llm = llm
 
     def chat(
