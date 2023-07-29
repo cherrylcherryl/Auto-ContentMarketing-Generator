@@ -4,7 +4,9 @@ from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
 from langchain.llms import OpenAI
 from utils.json_utils import llm_response_schema
-from apikey import OPENAI_API_KEY
+from apikey import load_env
+OPENAI_API_KEY, SERPER_API_KEY = load_env()
+
 
 class AutoMarketAnalysisPromptGenerator:
     def __init__(

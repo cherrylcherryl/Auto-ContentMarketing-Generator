@@ -1,5 +1,6 @@
 import os
-from apikey import OPENAI_API_KEY, SERPER_API_KEY
+from apikey import load_env
+OPENAI_API_KEY, SERPER_API_KEY = load_env()
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 os.environ["SERPER_API_KEY"] = SERPER_API_KEY
 
@@ -17,22 +18,18 @@ class LLMStaticChat:
     ):
         self.temperature = temperature
         if llm is None:
-            llm = OpenAI(temperature=self.temperature, openai_api_key=OPENAI_API_KEY)
-        self.llm = llm
-        search = GoogleSerperAPIWrapper()
-        tools = [
-            Tool(
-                name="Intermediate Answer",
-                func=search.run,
-                description="useful for when you need to ask with search"
+            llm = OpenAI(
+                model='gpt-3.5-turbo',
+                temperature=self.temperature, 
+                openai_api_key=OPENAI_API_KEY
             )
-        ]
-
+        self.llm = llm
+        self.tools = load_tools(["google-serper"])
         self.agent = initialize_agent(
-            tools = tools,
-            llm = self.llm,
-            agent = AgentType.SELF_ASK_WITH_SEARCH,
-            verbose = True
+            tools= self.tools,
+            llm= self.llm,
+            agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+            verbose=True,
         )
     
     def company_analysis(
@@ -42,9 +39,8 @@ class LLMStaticChat:
     ) -> dict: 
         prompt_template = StaticPromptTemplate()
         company_analysis = dict()
-        company_analysis["market_analysis"] = self.__query_in_loop__(
+        company_analysis["market_analysis"] = self.run_agent(
             prompt=prompt_template.get_market_analysis_prompt(domain),
-            validator=validate_market_analysis_schema
         )
         company_analysis["competitor"] = self.__query_in_loop__(
             prompt=prompt_template.get_competitor_prompt(company),
@@ -72,3 +68,10 @@ class LLMStaticChat:
             else:
                 return res
         return None
+    
+    def run_agent(
+            self,
+            prompt : str
+    ) -> str:
+        response = self.agent.run(prompt)
+        return response

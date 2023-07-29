@@ -1,5 +1,5 @@
-langchain==0.0.205
-openai==0.27.2
+langchain==0.0.247
+openai==0.27.8
 fastapi==0.97.0
 chromadb==0.3.26
 tiktoken==0.3.3

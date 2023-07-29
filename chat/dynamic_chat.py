@@ -1,6 +1,4 @@
 import os
-from apikey import OPENAI_API_KEY
-os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 from langchain.chat_models import ChatOpenAI
 from langchain.llms import OpenAI
 from prompts.auto_generator import (
@@ -10,9 +8,13 @@ from prompts.auto_generator import (
     AutoContentCreationPromptGenerator
 )
 from agent.agent import Agent
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from viewmodel.model import CompanyInfo
 from typing import Union, Tuple, Any
+
+from apikey import load_env
+OPENAI_API_KEY, SERPER_API_KEY = load_env()
+os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+
 class LLMDynamicChat:
     def __init__(
             self,
@@ -30,6 +32,7 @@ class LLMDynamicChat:
                 temperature=temperature, 
                 openai_api_key=OPENAI_API_KEY
             )
+        self.llm = llm
         if market_analysis_prompt_generator is None:
             market_analysis_prompt_generator = AutoMarketAnalysisPromptGenerator(llm=self.llm)
         if competitor_analysis_prompt_generator is None:

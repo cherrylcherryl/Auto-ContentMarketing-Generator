@@ -2,11 +2,12 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import WebBaseLoader
-from apikey import OPENAI_API_KEY
+from apikey import load_env
 import os
-os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-import nest_asyncio
-nest_asyncio.apply()
+
+OPENAI_API_KEY, SERPER_API_KEY = load_env()
+# import nest_asyncio
+# nest_asyncio.apply()
 
 
 MARKET_ANALYSIS_SITES = [

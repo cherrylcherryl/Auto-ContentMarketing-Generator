@@ -2,7 +2,10 @@ from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
 from typing import Union, List
-from apikey import OPENAI_API_KEY
+from apikey import load_env
+
+OPENAI_API_KEY, SERPER_API_KEY = load_env()
+
 class ChatService:
     def __init__(
             self,

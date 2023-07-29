@@ -2,7 +2,7 @@
 class BaseConfig:
     def __init__(
             self,
-            name : str,
+            name : str = 'AI',
             model : str = 'gpt-3.5-turbo',
             temperature : float = 0.0,
             chat : bool = False,

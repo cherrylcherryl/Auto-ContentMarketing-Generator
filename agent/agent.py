@@ -1,5 +1,5 @@
 import os
-from apikey import OPENAI_API_KEY, SERPER_API_KEY
+from apikey import load_env
 from langchain.agents import tools, load_tools
 from langchain.llms import OpenAI
 from config.supported import AGENT_TOOLS
@@ -8,6 +8,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain import LLMChain
 
+OPENAI_API_KEY, SERPER_API_KEY = load_env()
 os.environ["SERPER_API_KEY"] = SERPER_API_KEY
 
 from langchain.agents import initialize_agent, AgentType
