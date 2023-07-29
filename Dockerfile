@@ -6,7 +6,7 @@ ENV SERPER_API_KEY=e7ce86460e7210bef65bf76c1b4432800c9152dc
 RUN mkdir /app
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y netcat gcc
+RUN apt-get update && apt-get install -y netcat gcc g++
 
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && pip install -r requirements.txt

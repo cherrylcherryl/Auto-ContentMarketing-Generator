@@ -116,7 +116,7 @@ class LLMDynamicChat:
 
         companyResearchInfo = {
             "market_analysis": market_analysis,
-            "competotor": competitor_analysis,
+            "competitor": competitor_analysis,
             "key_selling_point": selling_point_analysis
         }
 
