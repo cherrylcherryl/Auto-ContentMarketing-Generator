@@ -20,56 +20,36 @@ class AgentService:
     ):
         self.config = config
 
-        if self.config.chat == False:
-            self.llm = OpenAI(
-                model=self.config.model,
-                temperature=self.config.temperature,
-                verbose=self.config.logging,
-                openai_api_key=OPENAI_API_KEY
-            )
-        else:
-            self.llm = ChatOpenAI(
-                model=self.config.model,
-                temperature=self.config.temperature,
-                verbose=self.config.logging,
-                openai_api_key=OPENAI_API_KEY
-            )
+        self.openai_llm_chat = ChatOpenAI(
+            model=self.config.model,
+            temperature=self.config.temperature,
+            verbose=self.config.logging,
+            openai_api_key=OPENAI_API_KEY
+        )
 
         if self.config.dynamic == True:
             self.analizer = LLMDynamicChat(
-                llm = self.llm,
-                temperature=self.config.temperature
+                llm = self.openai_llm_chat,
+                temperature=self.config.temperature,
+                language=self.config.language
             )
         else:
             self.analizer = LLMStaticChat(
-                llm = self.llm,
-                temperature=self.config.temperature
+                llm = self.openai_llm_chat,
+                temperature=self.config.temperature,
+                language=self.config.language
             )
 
+        self.openai_llm = OpenAI(
+            model=self.config.model,
+            temperature=self.config.temperature,
+            verbose=self.config.logging,
+            openai_api_key=OPENAI_API_KEY
+        )
         self.creator = ChatService(
-            llm=self.llm,
+            llm=self.openai_llm,
             temperature=self.config.temperature
         )
-
-    def change_llm(
-            self,
-            temperature : float = 0.5,
-
-    ) -> None:
-        if self.config.chat == False:
-            self.llm = OpenAI(
-                model=self.config.model,
-                temperature=temperature,
-                verbose=self.config.logging,
-                openai_api_key=OPENAI_API_KEY
-            )
-        else:
-            self.llm = ChatOpenAI(
-                model=self.config.model,
-                temperature=temperature,
-                verbose=self.config.logging,
-                openai_api_key=OPENAI_API_KEY
-            )
 
     def do_analysis(
             self,

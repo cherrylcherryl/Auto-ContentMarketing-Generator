@@ -1,6 +1,6 @@
 
 from langchain import PromptTemplate
-
+from utils.prompt_utils import add_market_analysis_constraint, add_competitor_analysis_constraint, add_key_selling_point_analysis_constraint
 class StaticPromptTemplate:
     def __init__(self):
         self.MARKET_ANALYSIS_PROMPT = PromptTemplate(
@@ -12,7 +12,8 @@ class StaticPromptTemplate:
 
         self.COMPETITORS_PROMPT = PromptTemplate(
             input_variables=["company"],
-            template='''My company is {company}, what are top 10 competiors of my companies
+            template='''What are top 10 competiors of {company} company.
+            You must reply the final answer with a valid format.
             '''
         )
 
@@ -30,13 +31,9 @@ class StaticPromptTemplate:
             domain : str
         ) -> str:
         prompt = self.MARKET_ANALYSIS_PROMPT.format(domain=domain)
-        # prompt += '''\n
-        # Reply with a valid json format:
-        # {
-        #     "chance": the chance of my company in this market, reply with a list format as ["chance_1", "chance_2", ... , "chance_n"], each element is a string format so put it on quotes \n
-        #     "challenge": the challenge of my company, reply with a list format as ["challenge_1", "challenge_2", ... , "challenge_n"], each element is a string format so put it on quotes \n
-        # } 
-        # '''
+        prompt = add_market_analysis_constraint(
+            base_prompt=prompt
+        )
         return prompt
     
     def get_competitor_prompt(
@@ -44,20 +41,9 @@ class StaticPromptTemplate:
             company : str
         ) -> str:
         prompt = self.COMPETITORS_PROMPT.format(company=company)
-        prompt += '''\n
-        Reply with a valid list of json format:
-        [
-            {
-                "name": the name of competitor_1,
-                "reason": the reason that you said it is my conpetitor_1
-            },
-            ...
-            {
-                "name": the name of competitor_n,
-                "reason": the reason that you said it is my conpetitor_n 
-            }
-        ]
-        '''
+        prompt = add_competitor_analysis_constraint(
+            base_prompt=prompt
+        )
         return prompt
     
     def get_key_selling_point(
@@ -65,14 +51,8 @@ class StaticPromptTemplate:
             company : str
         ) -> str:
         prompt = self.KEY_SELLING_POINT.format(company=company)
-        prompt += '''\n
-        Reply with a valid json format consit of a list of json object as:
-        [
-            {
-                "name": key selling point name,
-                "reason": explain for what you said that is key selling point,
-            },...
-        ]
-        '''
+        prompt = add_key_selling_point_analysis_constraint(
+            base_prompt=prompt
+        )
         return prompt
 

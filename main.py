@@ -14,7 +14,7 @@ async def get_version():
 
 @app.post("/analysis/conpany-analysis")
 async def company_analysis(companyInfo : CompanyInfo):
-    config = BaseConfig()
+    config = BaseConfig(language=companyInfo.language)
     service = AgentService(config=config)
     info = service.do_analysis(companyInfo=companyInfo)
     return info

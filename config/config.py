@@ -5,13 +5,15 @@ class BaseConfig:
             name : str = 'AI',
             model : str = 'gpt-3.5-turbo',
             temperature : float = 0.0,
-            chat : bool = False,
             dynamic : bool = False,
-            logging : bool = True
+            logging : bool = True,
+            language : str = "English",
+            tone: str = "Funny"
     ):
         self.name = name
         self.model = model
         self.temperature = temperature
-        self.chat = chat
         self.dynamic = dynamic
         self.logging = logging
+        self.language = language
+        self.tone = tone
