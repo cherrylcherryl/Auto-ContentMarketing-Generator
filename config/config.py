@@ -8,7 +8,8 @@ class BaseConfig:
             dynamic : bool = False,
             logging : bool = True,
             language : str = "English",
-            tone: str = "Funny"
+            tone: str = "Funny",
+            chat : bool = True
     ):
         self.name = name
         self.model = model
@@ -17,3 +18,4 @@ class BaseConfig:
         self.logging = logging
         self.language = language
         self.tone = tone
+        self.chat = chat

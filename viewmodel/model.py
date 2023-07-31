@@ -11,6 +11,7 @@ class CompanyInfo(BaseModel):
     language : Literal["English", "Vietnamese"]
 
 class CompanyAnalysis(BaseModel):
+    name : str
     market_analysis: Union[str, dict, List[dict], list]
     competitor : Union[str, list, dict, List[dict]]
     key_selling_point : Union[str, list, dict, List[dict]]

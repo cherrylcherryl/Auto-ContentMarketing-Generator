@@ -6,7 +6,7 @@ from chat.static_chat import LLMStaticChat
 from chat.chat_service import ChatService
 from typing import Union, Literal, Tuple, Any, Optional
 from viewmodel.model import CompanyInfo, CompanyAnalysis
-
+from prompts.content_template import ContentGeneratorPrompt
 
 from apikey import load_env
 
@@ -20,32 +20,36 @@ class AgentService:
     ):
         self.config = config
 
+        
         self.openai_llm_chat = ChatOpenAI(
             model=self.config.model,
             temperature=self.config.temperature,
             verbose=self.config.logging,
             openai_api_key=OPENAI_API_KEY
         )
-
-        if self.config.dynamic == True:
-            self.analizer = LLMDynamicChat(
-                llm = self.openai_llm_chat,
-                temperature=self.config.temperature,
-                language=self.config.language
-            )
-        else:
-            self.analizer = LLMStaticChat(
-                llm = self.openai_llm_chat,
-                temperature=self.config.temperature,
-                language=self.config.language
-            )
-
+    
         self.openai_llm = OpenAI(
             model=self.config.model,
             temperature=self.config.temperature,
             verbose=self.config.logging,
             openai_api_key=OPENAI_API_KEY
         )
+
+        self.llm = self.openai_llm_chat if self.config.chat else self.openai_llm
+
+        if self.config.dynamic == True:
+            self.analizer = LLMDynamicChat(
+                llm = self.llm,
+                temperature=self.config.temperature,
+                language=self.config.language
+            )
+        else:
+            self.analizer = LLMStaticChat(
+                llm = self.llm,
+                temperature=self.config.temperature,
+                language=self.config.language
+            )
+
         self.creator = ChatService(
             llm=self.openai_llm,
             temperature=self.config.temperature
@@ -66,11 +70,14 @@ class AgentService:
                 company=companyInfo.name,
                 domain=companyInfo.domain
             )
-            return info
+            return info, None
 
     def do_create_post(
             self,
             companyAnalysis : CompanyAnalysis,
-            memory : Optional[Any]
+            memory : Optional[Any] = None
     ) -> str:
-        pass
+        template = ContentGeneratorPrompt()
+        prompt = template.get_content_generator_prompt(companyAnalysis=companyAnalysis)
+        post = self.creator.chat(prompt)
+        return post

@@ -5,6 +5,7 @@ os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 os.environ["SERPER_API_KEY"] = SERPER_API_KEY
 
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 from langchain.utilities import GoogleSerperAPIWrapper
 from langchain.agents import initialize_agent, AgentType, load_tools, Tool
 from prompts.analysis_template import StaticPromptTemplate
@@ -12,11 +13,12 @@ from utils.json_utils import validate_list_schema, validate_market_analysis_sche
 from typing import Callable, Union, Any, Tuple
 from utils.prompt_utils import add_language
 from agent.agent import Agent
+from agent.agent_search import SearchAgent
 
 class LLMStaticChat:
     def __init__(
             self,
-            llm : ChatOpenAI | None = None,
+            llm : Union[ChatOpenAI, OpenAI, None] = None,
             temperature : int = 0,
             language : str = "English"
     ):
@@ -32,9 +34,11 @@ class LLMStaticChat:
         self.llm = llm
         
         self.agent = Agent(
-                llm = llm,
+                llm = self.llm,
                 tools=["google-serper"],
             )
+
+        #self.agent = SearchAgent(llm = llm, temperature=0.0)
     
     def company_analysis(
             self,
@@ -44,22 +48,13 @@ class LLMStaticChat:
         prompt_template = StaticPromptTemplate()
         company_analysis = dict()
         company_analysis["market_analysis"] = self.run_agent(
-            prompt=add_language(
-                language=self.language,
-                base_prompt=prompt_template.get_market_analysis_prompt(domain)
-            ),
+            prompt=prompt_template.get_market_analysis_prompt(company, domain)
         )
         company_analysis["competitor"] = self.run_agent(
-            prompt=add_language(
-                language=self.language,
-                base_prompt=prompt_template.get_competitor_prompt(company)
-            ),
+            prompt=prompt_template.get_competitor_prompt(company)
         )
         company_analysis["key_selling_point"] = self.run_agent(
-            prompt=add_language(
-                language=self.language,
-                base_prompt=prompt_template.get_key_selling_point(company)
-            ) 
+           prompt=prompt_template.get_key_selling_point(company)
         )
 
         return company_analysis

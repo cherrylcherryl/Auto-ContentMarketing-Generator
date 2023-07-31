@@ -3,7 +3,7 @@ def add_language(
         language : str,
         base_prompt : str,
 ) -> str:
-    lang_prompt = f"Reply with the following language. Language: {language}"
+    lang_prompt = f"Only reply with the valid language, the valid language is: {language}. If the answer not avaliable in {language}, you must translate it."
     lang_prompt = f'{base_prompt}\n{lang_prompt}'
     return lang_prompt
 
@@ -21,11 +21,17 @@ def add_market_analysis_constraint(
         base_prompt : str
 ) -> str:
     constraint = '''\n
-        Reply with a valid json format:
-        {
-            "chance": the chance of my company in this market, reply with a list format as ["chance_1", "chance_2", ... , "chance_n"], each element is a string format so put it on quotes \n
-            "challenge": the challenge of my company, reply with a list format as ["challenge_1", "challenge_2", ... , "challenge_n"], each element is a string format so put it on quotes \n
-        } 
+        Reply with a format:
+        "chance": the chance of my company in this market, reply with a format as 
+        1. chance 1
+        2. chance 2
+        ...
+        n. chance n
+        "challenge": the challenge of my company, reply with a list format as 
+        1. challenge 1
+        2. challenge 2
+        ...
+        n. challenge n  
         '''
     return base_prompt + constraint
 
@@ -33,22 +39,11 @@ def add_competitor_analysis_constraint(
         base_prompt : str
 ) -> str:
     constraint = '''\n
-        Reply with a valid json format:
-        {
-                [
-                        {
-                                "number": 1,
-                                "name": the name of competitor_1,
-                                "reason": the reason that you said it is my conpetitor_1
-                        },
-                        ...
-                        {
-                                "number": n,
-                                "name": the name of competitor_n,
-                                "reason": the reason that you said it is my conpetitor_n 
-                        }
-                ]
-        }
+        Give me a list of competitor base on the following format:
+        1. Competitor 1: the reason you said that is my competitor
+        2. Competitor 2: the reason you said that is my competitor
+        ...
+        n. Competitor n: the reason you said that is my competitor
         '''
     return base_prompt + constraint
 
@@ -56,16 +51,24 @@ def add_key_selling_point_analysis_constraint(
         base_prompt : str
 ) -> str:
     constraint = '''\n
-        Reply with a valid json format consit of a list of json object as:
-        {
-                [
-                        {
-                                "number": 1,
-                                "name": key selling point name,
-                                "reason": explain for what you said that is key selling point,
-                        },
-                        ...
-                ]
-        }
+        Give me a list of key selling point base on the following format:
+        1. Key selling point 1: the reason you said that is my Key selling point
+        2. Key selling point 2: the reason you said that is my Key selling point
+        ...
+        n. Key selling point n: the reason you said that is my Key selling point
+        '''
+    return base_prompt + constraint
+
+def add_analysis_info(
+        market_analysis : str,
+        competitor : str,
+        key_selling_point : str,
+        base_prompt : str
+) -> str :
+    constraint = f'''
+        You can use this additional information for create bester post.
+        Market analysis : {market_analysis}\n
+        Competitor: {competitor} \n
+        Key selling point: {key_selling_point}\n
         '''
     return base_prompt + constraint

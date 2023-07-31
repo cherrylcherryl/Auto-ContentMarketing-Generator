@@ -9,7 +9,6 @@ from langchain.memory import ConversationSummaryBufferMemory
 from langchain import LLMChain
 
 OPENAI_API_KEY, SERPER_API_KEY = load_env()
-os.environ["SERPER_API_KEY"] = SERPER_API_KEY
 
 from langchain.agents import initialize_agent, AgentType
 
@@ -32,7 +31,7 @@ class Agent:
             self.agent = initialize_agent(
                 tools= self.tools,
                 llm= self.llm,
-                agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+                agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
                 verbose=True,
                 memory= self.memory
             )
@@ -40,7 +39,7 @@ class Agent:
             self.agent = initialize_agent(
                 tools= self.tools,
                 llm= self.llm,
-                agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+                agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
                 verbose=True,
             )
         

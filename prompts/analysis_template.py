@@ -4,15 +4,15 @@ from utils.prompt_utils import add_market_analysis_constraint, add_competitor_an
 class StaticPromptTemplate:
     def __init__(self):
         self.MARKET_ANALYSIS_PROMPT = PromptTemplate(
-            input_variables=["domain"],
+            input_variables=["company", "domain"],
             template='''
-            My company is working on {domain}, in this market what is my chance and challenge
+            My company is {company} and working on {domain}, in this market what is my chance and challenge
             '''
         )
 
         self.COMPETITORS_PROMPT = PromptTemplate(
             input_variables=["company"],
-            template='''What are top 10 competiors of {company} company.
+            template='''What are top 5 competiors of {company} company.
             You must reply the final answer with a valid format.
             '''
         )
@@ -28,9 +28,10 @@ class StaticPromptTemplate:
     
     def get_market_analysis_prompt(
             self,
+            company: str,
             domain : str
         ) -> str:
-        prompt = self.MARKET_ANALYSIS_PROMPT.format(domain=domain)
+        prompt = self.MARKET_ANALYSIS_PROMPT.format(company=company, domain=domain)
         prompt = add_market_analysis_constraint(
             base_prompt=prompt
         )

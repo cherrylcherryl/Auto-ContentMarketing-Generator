@@ -16,16 +16,34 @@ async def get_version():
 async def company_analysis(companyInfo : CompanyInfo):
     config = BaseConfig(language=companyInfo.language)
     service = AgentService(config=config)
-    info = service.do_analysis(companyInfo=companyInfo)
+    info, mem = service.do_analysis(companyInfo=companyInfo)
     return info
 
 @app.post("/analysis/create-content")
 async def create_marketing_content(companyAnalysis : CompanyAnalysis):
-    pass
+    config = BaseConfig(language=CompanyAnalysis.language)
+    service = AgentService(config=config)
+    post = service.do_create_post(companyAnalysis=companyAnalysis)
+    return post
 
 @app.post("/creator/create-content")
 async def auto_create_content(companyInfo : CompanyInfo):
-    pass
+    config = BaseConfig(language=companyInfo.language)
+    service = AgentService(config=config)
+    info, mem = service.do_analysis(companyInfo=companyInfo)
+
+    companyAnalysis = CompanyAnalysis(
+        name=companyInfo.name,
+        market_analysis=info["market_analysis"],
+        competitor=info["competitor"],
+        key_selling_point=info["key_selling_point"],
+        socialMedia=companyInfo.socialMedia,
+        language=companyInfo.language,
+        tone=companyInfo.tone,
+        website=companyInfo.website
+    )
+    post = service.do_create_post(companyAnalysis)
+    return post
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=5000)

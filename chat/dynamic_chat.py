@@ -64,24 +64,24 @@ class LLMDynamicChat:
     ) -> Union[dict, Tuple[dict, Any]]: 
         
         market_analysis_prompt = self.market_analysis_prompt_generator.generate_dynamic_prompt(domain=companyInfo.domain)
-        market_analysis_prompt = add_language(
-                language=self.language, 
-                base_prompt=market_analysis_prompt
-            )
+        # market_analysis_prompt = add_language(
+        #         language=self.language, 
+        #         base_prompt=market_analysis_prompt
+        #     )
         market_analysis = self.agent.answer(market_analysis_prompt)
         
         competitor_prompt = self.competitor_analysis_prompt_generator.generate_dynamic_prompt(domain=companyInfo.domain)
-        competitor_prompt = add_language(
-                language=self.language, 
-                base_prompt=competitor_prompt
-            )
+        # competitor_prompt = add_language(
+        #         language=self.language, 
+        #         base_prompt=competitor_prompt
+        #     )
         competitor_analysis = self.agent.answer(competitor_prompt)
 
         selling_point_prompt = self.selling_point_analysis_prompt_generator.generate_dynamic_prompt(domain=companyInfo.domain, competitor_analysis=competitor_analysis)
-        selling_point_prompt = add_language(
-                language=self.language, 
-                base_prompt=selling_point_prompt
-            )
+        # selling_point_prompt = add_language(
+        #         language=self.language, 
+        #         base_prompt=selling_point_prompt
+        #     )
         selling_point_analysis, memory= self.agent.answer(selling_point_prompt, returning_memory=returning_memory)
 
         companyResearchInfo = {
