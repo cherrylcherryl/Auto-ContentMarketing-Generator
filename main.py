@@ -12,9 +12,9 @@ app = FastAPI()
 async def get_version():
     return '1.0'
 
-@app.post("/analysis/conpany-analysis")
+@app.post("/analysis/company-analysis")
 async def company_analysis(companyInfo : CompanyInfo):
-    config = BaseConfig(language=companyInfo.language)
+    config = BaseConfig(language=companyInfo.language, dynamic=companyInfo.startup)
     service = AgentService(config=config)
     info, mem = service.do_analysis(companyInfo=companyInfo)
     return info
@@ -28,7 +28,7 @@ async def create_marketing_content(companyAnalysis : CompanyAnalysis):
 
 @app.post("/creator/create-content")
 async def auto_create_content(companyInfo : CompanyInfo):
-    config = BaseConfig(language=companyInfo.language)
+    config = BaseConfig(language=companyInfo.language, dynamic=companyInfo.startup)
     service = AgentService(config=config)
     info, mem = service.do_analysis(companyInfo=companyInfo)
 
@@ -37,7 +37,7 @@ async def auto_create_content(companyInfo : CompanyInfo):
         market_analysis=info["market_analysis"],
         competitor=info["competitor"],
         key_selling_point=info["key_selling_point"],
-        socialMedia=companyInfo.socialMedia,
+        social_media=companyInfo.social_media,
         language=companyInfo.language,
         tone=companyInfo.tone,
         website=companyInfo.website

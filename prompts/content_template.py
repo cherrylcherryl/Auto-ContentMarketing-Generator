@@ -18,7 +18,7 @@ class ContentGeneratorPrompt:
     ) -> str:
         base_prompt = self.templates.format(
             company=companyAnalysis.name,
-            socialMedia=companyAnalysis.socialMedia,
+            social_media=companyAnalysis.social_media,
             tone=companyAnalysis.tone
         )
         base_prompt = add_analysis_info(
