@@ -5,10 +5,10 @@ from utils.prompt_utils import add_analysis_info, add_language
 class ContentGeneratorPrompt:
     def __init__(self):
         self.templates =  PromptTemplate(
-                input_variables=["company", "socialMedia", "tone"],
+                input_variables=["company", "social_media", "tone"],
                 template='''
                     I'm looking for some creative ways to promote our {company} through content marketing and engage our target audience.
-                    Write a post in {socialMedia} with {tone} tone style, including hashtag and other additional information that is common on this media.            
+                    Write a post in {social_media} with {tone} tone style, including hashtag and other additional information that is common on this media.            
                 '''
             )
 
