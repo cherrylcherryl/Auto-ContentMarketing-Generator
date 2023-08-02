@@ -21,9 +21,42 @@ async def company_analysis(companyInfo : CompanyInfo):
 
 @app.post("/analysis/create-content")
 async def create_marketing_content(companyAnalysis : CompanyAnalysis):
-    config = BaseConfig(language=CompanyAnalysis.language)
+    config = BaseConfig(language=companyAnalysis.language)
     service = AgentService(config=config)
+
+#     #Test data
+#     companyAnalysis.market_analysis = '''
+# "chance":
+# 1. Market growth
+
+# "challenge":
+# 1. Setting and keeping up with deadlines
+# 2. Client retention/reducing churn
+# 3. Retaining quality talent
+# 4. Standing out from the crowd
+# 5. Finding and retaining the right people
+# 6. Getting more customers
+# 7. Providing proof of service before purchase
+# 8. Poor planning and lack of staff training
+# 9. Unrealistic expectations
+# 10. Lean budgets
+# 11. Pricing pressures
+# 12. Measurement of PR
+# 13. AI-generated content
+# 14. Client-facing data quality
+
+# '''
+#     companyAnalysis.competitor = '''
+# 1. Flibbr Consulting: They offer similar services and have a strong presence in the market.
+# 2. Syncom Media: They have a similar target audience and offer competitive pricing.
+# 3. Asymmetrique: They have a strong reputation in the industry and offer innovative solutions.
+
+# '''
+#     companyAnalysis.key_selling_point='''
+# The key selling points of PMax's products are maximizing reach, utilizing machine learning for optimal performance, offering features for issue diagnosis and improvement, and providing goal-based automation.
+# '''
     post = service.do_create_post(companyAnalysis=companyAnalysis)
+    print(post)
     return post
 
 @app.post("/creator/create-content")

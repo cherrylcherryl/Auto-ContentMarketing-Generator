@@ -18,9 +18,10 @@ class ChatService:
 
     def chat(
             self,
-            prompt : str,
+            prompt,
     ) -> str:
-        return self.llm(prompt)
+        response = self.llm(messages=prompt)
+        return response.content
 
     def chat_with_template(
             self,

@@ -1,6 +1,7 @@
 from langchain.prompts import PromptTemplate
 from viewmodel.model import CompanyAnalysis
-from utils.prompt_utils import add_analysis_info, add_language
+from utils.prompt_utils import add_analysis_info, add_language, add_call_to_action, add_output_post_constraint
+from langchain.schema import AIMessage, HumanMessage, SystemMessage
 
 class ContentGeneratorPrompt:
     def __init__(self):
@@ -15,20 +16,60 @@ class ContentGeneratorPrompt:
     def get_content_generator_prompt(
             self, 
             companyAnalysis : CompanyAnalysis
-    ) -> str:
+    ):
+        
+
         base_prompt = self.templates.format(
             company=companyAnalysis.name,
             social_media=companyAnalysis.social_media,
             tone=companyAnalysis.tone
         )
-        base_prompt = add_analysis_info(
+
+        analysis_info = add_analysis_info(
             market_analysis=companyAnalysis.market_analysis,
             competitor=companyAnalysis.competitor,
             key_selling_point=companyAnalysis.key_selling_point,
-            base_prompt=base_prompt
+            base_prompt=""
         )
-        base_prompt = add_language(
+
+        message = [
+            SystemMessage(
+                content="You are professional content creator on social network."
+            ),
+            HumanMessage(
+                content=base_prompt
+            ),
+            SystemMessage(
+                content= analysis_info
+            ),
+        ]
+
+        if companyAnalysis.website is not None:
+            cta = add_call_to_action(
+                website_url=companyAnalysis.website, 
+                base_prompt="")
+            message.append(
+                SystemMessage(
+                    content=cta
+                )
+            )
+
+
+        message.append(
+            SystemMessage(
+                content=add_output_post_constraint()
+            )   
+        )
+
+        language = add_language(
             language=companyAnalysis.language,
-            base_prompt=base_prompt
+            base_prompt=""
         )
-        return base_prompt
+
+        message.append(
+            SystemMessage(
+                content=language
+            )
+        )
+        
+        return message

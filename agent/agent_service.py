@@ -35,7 +35,8 @@ class AgentService:
             openai_api_key=OPENAI_API_KEY
         )
 
-        self.llm = self.openai_llm_chat if self.config.chat else self.openai_llm
+        # self.llm = self.openai_llm_chat if self.config.chat else self.openai_llm
+        self.llm = self.openai_llm_chat
 
         if self.config.dynamic == True:
             self.analizer = LLMDynamicChat(
@@ -51,7 +52,7 @@ class AgentService:
             )
 
         self.creator = ChatService(
-            llm=self.openai_llm,
+            llm=self.llm,
             temperature=self.config.temperature
         )
 
@@ -80,4 +81,5 @@ class AgentService:
         template = ContentGeneratorPrompt()
         prompt = template.get_content_generator_prompt(companyAnalysis=companyAnalysis)
         post = self.creator.chat(prompt)
+        print(post)
         return post

@@ -3,7 +3,7 @@ def add_language(
         language : str,
         base_prompt : str,
 ) -> str:
-    lang_prompt = f"Only reply with the valid language, the valid language is: {language}. If the answer not avaliable in {language}, you must translate it."
+    lang_prompt = f"Only reply with the valid language, the valid language is: {language}"
     lang_prompt = f'{base_prompt}\n{lang_prompt}'
     return lang_prompt
 
@@ -72,3 +72,19 @@ def add_analysis_info(
         Key selling point: {key_selling_point}\n
         '''
     return base_prompt + constraint
+
+def add_call_to_action(
+        website_url : str,
+        base_prompt : str
+) -> str :
+    constraint = f'''
+    Includes CTA: {website_url}
+    '''
+    return base_prompt + constraint
+
+def add_output_post_constraint()-> str:
+    constraint = '''
+    The post should not include the introduction why it created.
+    Do not include the competitor instead of focus on company's strengths.
+    '''
+    return constraint
