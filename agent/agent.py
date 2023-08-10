@@ -7,6 +7,7 @@ from langchain.agents import initialize_agent, AgentType, AgentExecutor, ZeroSho
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain import LLMChain
+from agent.tools import search_company_db
 
 OPENAI_API_KEY, SERPER_API_KEY = load_env()
 
@@ -24,6 +25,7 @@ class Agent:
             assert tool in AGENT_TOOLS, "Unsupported tools!"
 
         self.tools = load_tools(tools)
+        tools.append(search_company_db)
         # self.prompt = ZeroShotAgent.create_prompt(self.tools)
         self.use_memory = use_memory
         if use_memory:
