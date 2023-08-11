@@ -13,7 +13,6 @@ class StaticPromptTemplate:
         self.COMPETITORS_PROMPT = PromptTemplate(
             input_variables=["company"],
             template='''What are top 5 competiors of {company} company.
-            You must reply the final answer with a valid format.
             '''
         )
 
@@ -42,9 +41,9 @@ class StaticPromptTemplate:
             company : str
         ) -> str:
         prompt = self.COMPETITORS_PROMPT.format(company=company)
-        prompt = add_competitor_analysis_constraint(
-            base_prompt=prompt
-        )
+        # prompt = add_competitor_analysis_constraint(
+        #     base_prompt=prompt
+        # )
         return prompt
     
     def get_key_selling_point(

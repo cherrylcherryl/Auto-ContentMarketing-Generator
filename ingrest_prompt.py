@@ -88,7 +88,6 @@ def ingrest_data(
 if __name__ == '__main__':
 
     embeddings = OpenAIEmbeddings(
-        model="gpt-3.5-turbo",
         openai_api_key=OPENAI_API_KEY
     )
    

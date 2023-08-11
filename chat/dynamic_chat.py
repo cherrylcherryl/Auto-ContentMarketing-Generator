@@ -10,7 +10,7 @@ from agent.agent import Agent
 from viewmodel.model import CompanyInfo
 from typing import Union, Tuple, Any
 from utils.prompt_utils import add_language
-
+from agent.tools import search_company_db
 
 from apikey import load_env
 OPENAI_API_KEY, SERPER_API_KEY = load_env()

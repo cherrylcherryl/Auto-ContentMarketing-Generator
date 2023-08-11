@@ -6,7 +6,7 @@ import json
 import pandas as pd
 import ast
 
-from typing import List
+from typing import List, Union
 
 from apikey import load_env
 
@@ -35,25 +35,32 @@ def load_data_company(
 
     return documents
     
-def ingrest_data(
-        documents : List[Document],
+def create_instance(
         embeddings : OpenAIEmbeddings, 
         path : str = "data/integrated/company_reviews"
-) -> None:
+) -> Chroma:
     instance = Chroma(embedding_function=embeddings, persist_directory=path)
-    instance.add_documents(documents=documents)
+    return instance
+
+def ingrest_data(
+        documents : Union[Document, List[Document]],
+        instance : Chroma
+) -> None:
+    instance.add_documents(documents=documents[:100])
     instance.persist()
         
 
 if __name__ == '__main__':
     documents = load_data_company()
     embeddings = OpenAIEmbeddings(
-        model="gpt-3.5-turbo",
         openai_api_key=OPENAI_API_KEY
+    )
+    chroma = create_instance(
+        embeddings=embeddings
     )
     ingrest_data(
         documents=documents,
-        embeddings=embeddings
+        instance=chroma
     )
 
     
