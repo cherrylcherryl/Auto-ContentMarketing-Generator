@@ -5,3 +5,4 @@ chromadb==0.3.26
 tiktoken==0.3.3
 uvicorn==0.22.0
 jsonschema==4.17.3
+bs4
