@@ -5,3 +5,5 @@
 # Run
 ```docker run -p 5001:5001 tagname```
 ```docker run -p 5001:5001 -e OPENAI_API_KEY=YOUR_OPENAI_API_KEY -e SERPER_API_KEY=YOUR_SERPER_API_KEY tagname```
+# If run with other contaier eg. Backend
+```docker run -p 5001:5001 --network [network-name] -e OPENAI_API_KEY=YOUR_OPENAI_API_KEY -e SERPER_API_KEY=YOUR_SERPER_API_KEY tagname```
