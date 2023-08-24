@@ -75,7 +75,7 @@ async def auto_create_content(companyInfo : CompanyInfo):
         tone=companyInfo.tone,
         website=companyInfo.website
     )
-    post = service.do_create_post(companyAnalysis)
+    post = service.do_create_post(companyAnalysis, memory=mem)
     return post
 
 if __name__ == '__main__':

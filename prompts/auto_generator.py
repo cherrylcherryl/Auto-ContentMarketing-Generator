@@ -8,17 +8,16 @@ from apikey import load_env
 OPENAI_API_KEY, SERPER_API_KEY = load_env()
 
 
+
 class AutoMarketAnalysisPromptGenerator:
     def __init__(
             self, 
-            llm : OpenAI | ChatOpenAI | None = None, 
+            llm : OpenAI | ChatOpenAI, 
             data_path : str = 'data/integrated/market_analysis'
     ):
         embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
         chroma_instance = Chroma(persist_directory=data_path, embedding_function=embeddings)
-        if llm is None:
-            llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
-
+        
         self.qa_model = RetrievalQA.from_chain_type(
             llm = llm,
             chain_type="stuff",
@@ -31,6 +30,8 @@ class AutoMarketAnalysisPromptGenerator:
             provides detail questions.
             The paragraph should contain "I want you to act as a "
         '''
+
+        
 
     def generate_dynamic_prompt(
             self, 
@@ -51,14 +52,12 @@ class AutoMarketAnalysisPromptGenerator:
 
 class AutoCompetitorAssessmentPromptGenerator:
     def __init__(
-            self, llm : ChatOpenAI | None = None, 
+            self, llm : ChatOpenAI, 
             data_path : str = 'data/integrated/competitor_assessments'
     ):
         embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
         chroma_instance = Chroma(persist_directory=data_path, embedding_function=embeddings)
-        if llm is None:
-            llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
-
+        
         self.qa_model = RetrievalQA.from_chain_type(
             llm = llm,
             chain_type="stuff",
@@ -92,14 +91,12 @@ class AutoCompetitorAssessmentPromptGenerator:
     
 class AutoDetectUniqueSellingPointPromptGenerator:
     def __init__(
-            self, llm : ChatOpenAI | None = None, 
+            self, llm : ChatOpenAI, 
             data_path : str = 'data/integrated/unique_selling_point'
     ):
         embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
         chroma_instance = Chroma(persist_directory=data_path, embedding_function=embeddings)
-        if llm is None:
-            llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
-
+        
         self.qa_model = RetrievalQA.from_chain_type(
             llm = llm,
             chain_type="stuff",
@@ -132,14 +129,12 @@ class AutoDetectUniqueSellingPointPromptGenerator:
 class AutoContentCreationPromptGenerator:
     def __init__(
             self, 
-            llm : ChatOpenAI | None = None, 
+            llm : ChatOpenAI, 
             data_path : str = 'data/integrated/content_creator'
     ):
         embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
         chroma_instance = Chroma(persist_directory=data_path, embedding_function=embeddings)
-        if llm is None:
-            llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
-
+        
         self.qa_model = RetrievalQA.from_chain_type(
             llm = llm,
             chain_type="stuff",

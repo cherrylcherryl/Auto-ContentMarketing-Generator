@@ -5,7 +5,7 @@ from langchain.agents import Tool
 from langchain.agents import initialize_agent
 from langchain.agents import AgentType
 from typing import Union
-from langchain.memory import ConversationSummaryBufferMemory
+from langchain.memory import ConversationSummaryBufferMemory, ConversationBufferMemory
 
 
 from apikey import load_env
@@ -17,7 +17,7 @@ class SearchAgent:
         self,
         llm : Union[ChatOpenAI, OpenAI],
         temperature : float = 0.0,
-        use_memory : bool = False
+        base_memory : Union[ConversationSummaryBufferMemory, ConversationBufferMemory] = None
     ):
         self.search = GoogleSerperAPIWrapper()
         if llm is None:
@@ -31,9 +31,9 @@ class SearchAgent:
                 description="useful for when you need to ask with search"
             )
         ]
-        self.use_memory = use_memory
-        if use_memory:
-            self.memory = ConversationSummaryBufferMemory(llm=self.llm, max_token_limit=10)
+       
+        if base_memory is None:
+            self.memory = ConversationBufferMemory()
             self.agent = initialize_agent(
                 tools=tools,
                 llm = self.llm,
@@ -42,11 +42,13 @@ class SearchAgent:
                 memory= self.memory
             )
         else:
+            self.memory = base_memory
             self.agent = initialize_agent(
                 tools=tools,
                 llm = self.llm,
                 agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
                 verbose=True,
+                memory = self.memory
             )
     
     def answer(
@@ -55,6 +57,6 @@ class SearchAgent:
             returning_memory = False
     ) -> str:
         answer = self.agent.run(prompt)
-        if returning_memory and self.use_memory:
+        if returning_memory:
             return answer, self.memory
         return answer

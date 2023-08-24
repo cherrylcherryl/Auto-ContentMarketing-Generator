@@ -7,10 +7,9 @@ from chat.chat_service import ChatService
 from typing import Union, Literal, Tuple, Any, Optional
 from viewmodel.model import CompanyInfo, CompanyAnalysis
 from prompts.content_template import ContentGeneratorPrompt
-
 from apikey import load_env
 
-OPENAI_API_KEY, SERPER_API_KEY = load_env()
+OPENAI_API_KEY, SERPER_API_KEY, OPENAI_API_KEYS = load_env(preservation_key=True)
 
 
 class AgentService:
@@ -20,41 +19,37 @@ class AgentService:
     ):
         self.config = config
 
+        self.llms = []
         
-        self.openai_llm_chat = ChatOpenAI(
-            model=self.config.model,
-            temperature=self.config.temperature,
-            verbose=self.config.logging,
-            openai_api_key=OPENAI_API_KEY
-        )
-    
-        self.openai_llm = OpenAI(
+        openai_llm_chat = ChatOpenAI(
             model=self.config.model,
             temperature=self.config.temperature,
             verbose=self.config.logging,
             openai_api_key=OPENAI_API_KEY
         )
 
-        # self.llm = self.openai_llm_chat if self.config.chat else self.openai_llm
-        self.llm = self.openai_llm_chat
+        self.llms.append(openai_llm_chat)
+        if len(OPENAI_API_KEYS) > 0:
+            for API_KEY in OPENAI_API_KEYS:
+                openai_llm_chat = ChatOpenAI(
+                    model=self.config.model,
+                    temperature=self.config.temperature,
+                    verbose=self.config.logging,
+                    openai_api_key=API_KEY
+                )
+                self.llms.append(openai_llm_chat)
+    
 
         if self.config.dynamic == True:
             self.analizer = LLMDynamicChat(
-                llm = self.llm,
-                temperature=self.config.temperature,
-                language=self.config.language
+                llms = self.llms,
             )
         else:
             self.analizer = LLMStaticChat(
-                llm = self.llm,
-                temperature=self.config.temperature,
-                language=self.config.language
+                llms = self.llms,
             )
 
-        self.creator = ChatService(
-            llm=self.llm,
-            temperature=self.config.temperature
-        )
+        
 
     def do_analysis(
             self,
@@ -67,19 +62,23 @@ class AgentService:
             )
             return info, memory
         else:
-            info = self.analizer.company_analysis(
+            info, memory = self.analizer.company_analysis(
                 company=companyInfo.name,
                 domain=companyInfo.domain
             )
-            return info, None
+            return info, memory
 
     def do_create_post(
             self,
             companyAnalysis : CompanyAnalysis,
             memory : Optional[Any] = None
     ) -> str:
+        creator = ChatService(
+            llm=self.llms[1%len(self.llms)],
+            memory=memory
+        )
         template = ContentGeneratorPrompt()
         prompt = template.get_content_generator_prompt(companyAnalysis=companyAnalysis)
-        post = self.creator.chat(prompt)
+        post = creator.chat(prompt)
         print(post)
         return post
