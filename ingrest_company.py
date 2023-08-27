@@ -8,9 +8,15 @@ import ast
 
 from typing import List, Union
 
+import argparse
+
 from apikey import load_env
 
 OPENAI_API_KEY, SERPER_API_KEY = load_env()
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-n", type = int, default = 100)
+args = parser.parse_args()
 
 def load_data_company(
         data_path : str = "data/custom/company_reviews.csv"
@@ -44,7 +50,8 @@ def create_instance(
 
 def ingrest_data(
         documents : Union[Document, List[Document]],
-        instance : Chroma
+        instance : Chroma,
+        n_companies : int = 10000
 ) -> None:
     instance.add_documents(documents=documents[:100])
     instance.persist()
@@ -60,7 +67,8 @@ if __name__ == '__main__':
     )
     ingrest_data(
         documents=documents,
-        instance=chroma
+        instance=chroma,
+        n_companies=args.n
     )
 
     
