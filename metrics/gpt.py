@@ -52,3 +52,5 @@ class EvaluationModel:
                 '''
             )
         )
+
+        result = self.llm(messages=message)
